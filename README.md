@@ -11,6 +11,7 @@ The UI will progress in 2-week sprints to deliver incremental functionality.
 ## Setup
 
 - Clone the repository.
+- Verify running a version of Node v16.
 - Verify `npm` is installed.
 - Verify you can run a React TypeScript project.
 - Run `npm i` to install dependencies.
@@ -23,6 +24,8 @@ The UI will progress in 2-week sprints to deliver incremental functionality.
 ## Testing
 
 To run all the automated tests together run: `npm run test`. This script will run both the component and E2E tests.
+
+*Testing must be performed with Node 16, as the `start-server-and-test package` does not yet support newer versions.*
 
 ### End-to-End (E2E) Tests
 
