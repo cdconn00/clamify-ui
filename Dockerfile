@@ -1,10 +1,11 @@
+# Install node, Cypress, and Cypress depedencies
 FROM cypress/included:12.0.1 as builder
 WORKDIR /app
 
 # Copy all files
 COPY . .
 
-# Install dependencies (npm ci verifies the versions in the lockfile get installed)
+# Install project dependencies and build
 RUN npm ci 
 RUN npm run build
 
