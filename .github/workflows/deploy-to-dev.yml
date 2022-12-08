@@ -2,7 +2,7 @@ name: Deploy Dev Clamify UI to Kubernetes
 
 on:
   push:
-    branches: ['develop', '*']
+    branches: ['develop']
 
 env:
   NODE_VERSION: '16.x' # The Node version to use.
