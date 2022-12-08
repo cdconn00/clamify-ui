@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-clamify-ui
+  labels:
+    app: dev-clamify-ui
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dev-clamify-ui
+  template:
+    metadata:
+      labels:
+        app: dev-clamify-ui
+    spec:
+      containers:
+      - name: dev-clamify-ui
+        image: ghcr.io/cdconn00/clamify-ui:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
