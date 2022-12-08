@@ -1,0 +1,87 @@
+name: Publish Production Clamify UI to Kubernetes
+
+on:
+  release:
+    types: [published]
+
+env:
+  NODE_VERSION: '16.x' # The Node version to use.
+
+jobs:
+  run-tests:
+    name: 'Build, Check Linting, and Test'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm run test
+
+  lint-project:
+    name: 'Check Formatting'
+    needs: run-tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - run: npm ci
+      - run: npm run format:check
+
+  push-to-registry:
+    name: Push Image to GitHub Packages
+    needs: lint-project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Add Version to Dockerfile
+        run: sed -i 's/v0.0.0/${{ github.sha }}/g' Dockerfile
+
+      - name: Setup Docker Builder
+        uses: docker/setup-buildx-action@v2
+
+      - name: Authenticate Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push New Image to GitHub Packages
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/${{ github.repository }}:latest
+
+  deploy:
+    name: Deploy to Kubernetes Cluster
+    needs: push-to-registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Login to Cluster
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 clamify-cluster
+
+      - name: Apply the Deployment File
+        run: kubectl set image deployment/clamify-ui clamify-ui=ghcr.io/${{ github.repository }}:${{ github.sha }}
+
+      - name: Verify Deployment apui
+        run: kubectl rollout status deployment/clamify-ui
