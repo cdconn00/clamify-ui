@@ -3,8 +3,6 @@ name: Run Tests, Lint, and Build
 on:
   pull_request:
     branches: ['*']
-  push:
-    branches: ['*']
 
 env:
   NODE_VERSION: '16.x' # The Node version to use.
