@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 5g
+  labels:
+    name: dev-clamify-ui-ingress
+  name: dev-clamify-ui-ingress
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: dev.clamify.org
+      http:
+        paths:
+          - backend:
+              service:
+                name: dev-clamify-ui-service
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
+status:
+  loadBalancer:
+    ingress:
+      - <Load balancer external ip goes here>

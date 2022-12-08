@@ -25,7 +25,7 @@ The UI will progress in 2-week sprints to deliver incremental functionality.
 
 To run all the automated tests together run: `npm run test`. This script will run both the component and E2E tests.
 
-*Testing must be performed with Node 16, as the `start-server-and-test package` does not yet support newer versions.*
+_Testing must be performed with Node 16, as the `start-server-and-test package` does not yet support newer versions._
 
 ### End-to-End (E2E) Tests
 
@@ -42,7 +42,10 @@ Component tests are performed with react-scripts. To run only the component test
 
 ## Deployments
 
-- TBD after deployments are configured.
+Deployments are handled automatically with GitHub Actions.
+
+- For development deployments, a push/merge into the `develop` branch will trigger a deployment to `dev.clamify.org`.
+- For production deployments, a new release will trigger a deployment to `clamify.org`.
 
 ## Code Standards
 
@@ -52,4 +55,4 @@ Component tests are performed with react-scripts. To run only the component test
 
 ### Linting
 
-- TBD
+- Linting is performed with `eslint` in addition to formatting with `prettier`, see the NPM scripts for commands. Both linting and formatting are enforced on PRs.
