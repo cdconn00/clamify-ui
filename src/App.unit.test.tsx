@@ -4,6 +4,6 @@ import App from "./App";
 
 test("renders placeholder text", () => {
   render(<App />);
-  const linkElement = screen.getByText(/Clamify  placeholder./i);
+  const linkElement = screen.getByText(/Clamify UI placeholder./i);
   expect(linkElement).toBeInTheDocument();
 });
