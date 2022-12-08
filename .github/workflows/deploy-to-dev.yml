@@ -44,8 +44,6 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-        with:
-          ref: 'develop'
 
       - name: Add Version to Dockerfile
         run: sed -i 's/v0.0.0/${{ github.sha }}/g' Dockerfile
