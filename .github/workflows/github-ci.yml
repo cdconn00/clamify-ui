@@ -2,25 +2,40 @@ name: Run Tests, Lint, and Build
 
 on:
   pull_request:
-    branches: ["*"]
+    branches: ['*']
   # temporary for testing while developing
   push:
-    branches: ["*"]
+    branches: ['*']
+
+env:
+  NODE_VERSION: '16.x' # The Node version to use.
 
 jobs:
   test-components:
-    name: "Run Tests"
+    name: 'Run Tests'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
 
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
       - run: npm ci
       - run: npm run build --if-present
       - run: npm run test
+
+  lint-project:
+    name: 'Lint Project'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm run lint
