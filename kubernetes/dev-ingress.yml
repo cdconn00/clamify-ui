@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: 5g
+    cert-manager.io/issuer: letsencrypt-prod
   labels:
     name: dev-clamify-ui-ingress
   name: dev-clamify-ui-ingress
@@ -20,6 +21,10 @@ spec:
                   number: 80
             path: /
             pathType: Prefix
+  tls:
+    - hosts:
+        - dev.clamify.org
+      secretName: dev-ui-tls-secret
 status:
   loadBalancer:
     ingress:

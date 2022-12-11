@@ -4,6 +4,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/from-to-www-redirect: 'true'
     nginx.ingress.kubernetes.io/proxy-body-size: 5g
+    cert-manager.io/issuer: letsencrypt-prod
   labels:
     name: clamify-ui-ingress
   name: clamify-ui-ingress
@@ -21,6 +22,10 @@ spec:
                   number: 80
             path: /
             pathType: Prefix
+  tls:
+    - hosts:
+        - clamify.org
+      secretName: ui-tls-secret
 status:
   loadBalancer:
     ingress:
